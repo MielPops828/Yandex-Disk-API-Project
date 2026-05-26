@@ -4,6 +4,7 @@ target/
 !**/src/test/**/target/
 .kotlin
 target
+allure-results
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

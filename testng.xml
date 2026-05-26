@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="YandexDiskAPISuite">
+    <listeners>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+    </listeners>
+    <test name="Yandex Disk API Tests">
+        <classes>
+            <class name="tests.AuthOnDiskTest"/>
+        </classes>
+    </test>
+</suite>
