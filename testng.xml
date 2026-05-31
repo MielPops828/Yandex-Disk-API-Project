@@ -6,6 +6,11 @@
     <test name="Yandex Disk API Tests">
         <classes>
             <class name="tests.AuthOnDiskTest"/>
+            <class name="tests.CreateFolderTest"/>
+            <class name="tests.DeleteFolderTest"/>
+            <class name="tests.RestoreFolderTest"/>
+            <class name="tests.AsyncDeleteFolderTest"/>
+            <class name="tests.AsyncRestoreFolderTest"/>
         </classes>
     </test>
 </suite>
