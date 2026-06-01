@@ -15,4 +15,7 @@ public interface Configuration extends Config {
 
     @Key("user.display.name")
     String getUserDisplayName();
+
+    @Key("create.folder.name")
+    String getFolderName();
 }

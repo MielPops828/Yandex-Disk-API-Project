@@ -10,10 +10,12 @@ import utils.Configuration;
 public abstract class BaseTest {
     protected RequestSpecification spec;
     protected Configuration config;
+    protected String token;
 
     @BeforeClass
     public void setup(){
         config = ConfigFactory.create(Configuration.class);
+        token = config.getToken();
         spec = new RequestSpecBuilder()
                 .setBaseUri(config.getUrl())
                 .setContentType(ContentType.JSON)
