@@ -1,12 +1,12 @@
 package tests;
 
 import io.qameta.allure.*;
-import io.restassured.response.Response;
+import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import utils.FolderHelper;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.notNullValue;
 
 @Epic("Yandex-Disk-API-Test")
 @Feature("Удаление папки")
@@ -23,9 +23,7 @@ public class DeleteFolderTest extends BaseTest{
                 .delete("/v1/disk/resources")
                 .then()
                 .statusCode(204);
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertFalse(FolderHelper.folderExists(spec, config.getToken(), folderName), "Папка не была удалена");
-        softAssert.assertAll();
+        Assert.assertFalse(FolderHelper.folderExists(spec, config.getToken(), folderName), "Папка не была удалена");
     }
 
     @Test
@@ -41,46 +39,40 @@ public class DeleteFolderTest extends BaseTest{
                 .delete("/v1/disk/resources")
                 .then()
                 .statusCode(204);
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertFalse(FolderHelper.folderExists(spec, config.getToken(), folderName), "Папка не была удалена");
-        softAssert.assertAll();
+        Assert.assertFalse(FolderHelper.folderExists(spec, config.getToken(), folderName), "Папка не была удалена");
     }
 
     @Test
     @Description("Удаление несуществующей папки")
     @Severity(SeverityLevel.NORMAL)
     public void testDeleteNonExistingFolder() {
-        Response response = given(spec)
+        given(spec)
                 .header("Authorization", "OAuth " + config.getToken())
                 .queryParam("path", "test1000")
                 .delete("/v1/disk/resources")
                 .then()
                 .statusCode(404)
-                .extract()
-                .response();
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(response.jsonPath().getString("error"));
-        softAssert.assertNotNull(response.jsonPath().getString("description"));
-        softAssert.assertNotNull(response.jsonPath().getString("message"));
-        softAssert.assertAll();
+                .body(
+                        "error", notNullValue(),
+                        "description", notNullValue(),
+                        "message", notNullValue()
+                );
     }
 
     @Test
     @Description("Удаление папки без указания названия")
     @Severity(SeverityLevel.NORMAL)
     public void testDeleteFolderWithoutPath() {
-        Response response = given(spec)
+        given(spec)
                 .header("Authorization", "OAuth " + config.getToken())
                 .delete("/v1/disk/resources")
                 .then()
                 .statusCode(400)
-                .extract()
-                .response();
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(response.jsonPath().getString("error"));
-        softAssert.assertNotNull(response.jsonPath().getString("description"));
-        softAssert.assertNotNull(response.jsonPath().getString("message"));
-        softAssert.assertAll();
+                .body(
+                        "error", notNullValue(),
+                        "description", notNullValue(),
+                        "message", notNullValue()
+                );
     }
 
     @Test
@@ -89,19 +81,17 @@ public class DeleteFolderTest extends BaseTest{
     public void testDeleteFolderWithoutAuth() {
         String folderName = "test_" + System.currentTimeMillis();
         FolderHelper.createFolder(spec, config.getToken(), folderName);
-        Response response = given(spec)
+        given(spec)
                 .queryParam("path", folderName)
                 .delete("/v1/disk/resources")
                 .then()
                 .statusCode(401)
-                .extract()
-                .response();
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(response.jsonPath().getString("error"));
-        softAssert.assertNotNull(response.jsonPath().getString("description"));
-        softAssert.assertNotNull(response.jsonPath().getString("message"));
-        softAssert.assertTrue(FolderHelper.folderExists(spec, config.getToken(), folderName), "Папка была удалена без авторизации");
-        softAssert.assertAll();
+                .body(
+                        "error", notNullValue(),
+                        "description", notNullValue(),
+                        "message", notNullValue()
+                );
+        Assert.assertTrue(FolderHelper.folderExists(spec, config.getToken(), folderName), "Папка была удалена без авторизации");
         FolderHelper.deleteFolder(spec, config.getToken(), folderName, true);
     }
 }

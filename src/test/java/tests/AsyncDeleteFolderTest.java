@@ -1,12 +1,12 @@
 package tests;
 
 import io.qameta.allure.*;
-import io.restassured.response.Response;
+import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import utils.FolderHelper;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.notNullValue;
 
 @Epic("Yandex-Disk-API-Test")
 @Feature("Асинхронное удаление папки")
@@ -49,59 +49,53 @@ public class AsyncDeleteFolderTest extends BaseTest{
     public void testDeleteFolderAsyncNoAuth() {
         String folderName = "test_" + System.currentTimeMillis();
         FolderHelper.createFolder(spec, config.getToken(), folderName);
-        Response response = given(spec)
+        given(spec)
                 .queryParam("path", folderName)
                 .queryParam("force_async", true)
                 .delete("/v1/disk/resources")
                 .then()
                 .statusCode(401)
-                .extract()
-                .response();
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(response.jsonPath().getString("error"));
-        softAssert.assertNotNull(response.jsonPath().getString("description"));
-        softAssert.assertNotNull(response.jsonPath().getString("message"));
-        softAssert.assertTrue(FolderHelper.folderExists(spec, config.getToken(), folderName));
-        softAssert.assertAll();
+                .body(
+                        "error", notNullValue(),
+                        "description", notNullValue(),
+                        "message", notNullValue()
+                );
+        Assert.assertTrue(FolderHelper.folderExists(spec, config.getToken(), folderName));
     }
 
     @Test
     @Description("Асинхронное удаление папки с указанием несуществующего названия папки")
     @Severity(SeverityLevel.NORMAL)
     public void testDeleteFolderAsyncNonExists() {
-        Response response = given(spec)
+        given(spec)
                 .header("Authorization", "OAuth " + config.getToken())
                 .queryParam("path", "testtest")
                 .queryParam("force_async", true)
                 .delete("/v1/disk/resources")
                 .then()
                 .statusCode(404)
-                .extract()
-                .response();
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(response.jsonPath().getString("error"));
-        softAssert.assertNotNull(response.jsonPath().getString("description"));
-        softAssert.assertNotNull(response.jsonPath().getString("message"));
-        softAssert.assertAll();
+                .body(
+                        "error", notNullValue(),
+                        "description", notNullValue(),
+                        "message", notNullValue()
+                );
     }
 
     @Test
     @Description("Асинхронное удаление папки без указания названия папки")
     @Severity(SeverityLevel.NORMAL)
     public void testDeleteFolderAsyncNotFolderName() {
-        Response response = given(spec)
+        given(spec)
                 .header("Authorization", "OAuth " + config.getToken())
                 .queryParam("force_async", true)
                 .delete("/v1/disk/resources")
                 .then()
                 .statusCode(400)
-                .extract()
-                .response();
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(response.jsonPath().getString("error"));
-        softAssert.assertNotNull(response.jsonPath().getString("description"));
-        softAssert.assertNotNull(response.jsonPath().getString("message"));
-        softAssert.assertAll();
+                .body(
+                        "error", notNullValue(),
+                        "description", notNullValue(),
+                        "message", notNullValue()
+                );
     }
 
     @Test
@@ -117,19 +111,17 @@ public class AsyncDeleteFolderTest extends BaseTest{
                 .delete("/v1/disk/resources")
                 .then()
                 .statusCode(202);
-        Response response = given(spec)
+        given(spec)
                 .header("Authorization", "OAuth " + config.getToken())
                 .queryParam("path", folderName)
                 .queryParam("force_async", true)
                 .delete("/v1/disk/resources")
                 .then()
                 .statusCode(423)
-                .extract()
-                .response();
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(response.jsonPath().getString("error"));
-        softAssert.assertNotNull(response.jsonPath().getString("description"));
-        softAssert.assertNotNull(response.jsonPath().getString("message"));
-        softAssert.assertAll();
+                .body(
+                        "error", notNullValue(),
+                        "description", notNullValue(),
+                        "message", notNullValue()
+                );
     }
 }
