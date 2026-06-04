@@ -18,4 +18,13 @@ public interface Configuration extends Config {
 
     @Key("create.folder.name")
     String getFolderName();
+
+    @Key("upload.folder.input.name")
+    String getUploadFolderInputName();
+
+    @Key("upload.folder.output.name")
+    String getUploadFolderOutputName();
+
+    @Key("download.folder.name")
+    String getDownloadFolderName();
 }
