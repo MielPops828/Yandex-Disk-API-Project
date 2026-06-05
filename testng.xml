@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="YandexDiskAPISuite" thread-count="6" parallel="methods">
+<suite name="YandexDiskAPISuite" thread-count="8" parallel="methods">
     <listeners>
         <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
     </listeners>
@@ -11,6 +11,8 @@
             <class name="tests.RestoreFolderTest"/>
             <class name="tests.AsyncDeleteFolderTest"/>
             <class name="tests.AsyncRestoreFolderTest"/>
+            <class name="tests.UploadAndCopyFileTest"/>
+            <class name="tests.DownloadFileTest"/>
         </classes>
     </test>
 </suite>

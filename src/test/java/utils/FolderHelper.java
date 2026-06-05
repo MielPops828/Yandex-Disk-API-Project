@@ -3,6 +3,7 @@ package utils;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -94,5 +95,24 @@ public class FolderHelper {
                 .extract()
                 .response();
         return response.jsonPath().getString("href");
+    }
+
+    public static void uploadFileOnFolder(RequestSpecification spec, String token, String diskPath, File file){
+        String href = given(spec)
+                .header("Authorization", "OAuth " + token)
+                .queryParam("path", diskPath)
+                .queryParam("overwrite", true)
+                .get("/v1/disk/resources/upload")
+                .then()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getString("href");
+        given()
+                .header("Authorization", "OAuth " + token)
+                .multiPart(file)
+                .put(href)
+                .then()
+                .statusCode(201);
     }
 }
