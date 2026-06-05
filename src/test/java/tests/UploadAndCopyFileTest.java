@@ -24,24 +24,29 @@ public class UploadAndCopyFileTest extends BaseTest{
         FolderHelper.createFolder(spec, config.getToken(), config.getUploadFolderOutputName());
 
         Path file = Files.createTempFile("data", ".txt");
-        Files.writeString(file, "username=SDET\npassword=secret_key");
+        try {
+            Files.writeString(file, "username=SDET\npassword=secret_key");
 
-        FolderHelper.uploadFileOnFolder(spec, config.getToken(), config.getUploadFolderInputName() + "/" + "data.txt", file.toFile());
+            FolderHelper.uploadFileOnFolder(spec, config.getToken(), config.getUploadFolderInputName() + "/" + "data.txt", file.toFile());
 
-        Response responseFirst = FileHelper.copyFileFromFolder(spec, config.getToken(), config.getUploadFolderInputName(), config.getUploadFolderOutputName(), "data.txt", 201);
-        OperationResponse operationResponse = responseFirst.as(OperationResponse.class);
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(operationResponse.getMethod());
-        softAssert.assertNotNull(operationResponse.getHref());
-        softAssert.assertNotNull(operationResponse.getTemplated());
+            Response responseFirst = FileHelper.copyFileFromFolder(spec, config.getToken(), config.getUploadFolderInputName(), config.getUploadFolderOutputName(), "data.txt", 201);
+            OperationResponse operationResponse = responseFirst.as(OperationResponse.class);
+            SoftAssert softAssert = new SoftAssert();
+            softAssert.assertNotNull(operationResponse.getMethod());
+            softAssert.assertNotNull(operationResponse.getHref());
+            softAssert.assertNotNull(operationResponse.getTemplated());
 
-        Response responseSecond = FileHelper.copyFileFromFolder(spec, config.getToken(), config.getUploadFolderInputName(), config.getUploadFolderOutputName(), "data.txt", 409);
-        ErrorResponse errorResponse = responseSecond.as(ErrorResponse.class);
-        softAssert.assertNotNull(errorResponse.getError());
-        softAssert.assertNotNull(errorResponse.getDescription());
-        softAssert.assertNotNull(errorResponse.getMessage());
-        softAssert.assertAll();
-
-        Files.deleteIfExists(file);
+            Response responseSecond = FileHelper.copyFileFromFolder(spec, config.getToken(), config.getUploadFolderInputName(), config.getUploadFolderOutputName(), "data.txt", 409);
+            ErrorResponse errorResponse = responseSecond.as(ErrorResponse.class);
+            softAssert.assertNotNull(errorResponse.getError());
+            softAssert.assertNotNull(errorResponse.getDescription());
+            softAssert.assertNotNull(errorResponse.getMessage());
+            softAssert.assertAll();
+        }
+        finally {
+            Files.deleteIfExists(file);
+            FolderHelper.deleteFolder(spec, config.getToken(), config.getUploadFolderInputName(), true);
+            FolderHelper.deleteFolder(spec, config.getToken(), config.getUploadFolderOutputName(), true);
+        }
     }
 }

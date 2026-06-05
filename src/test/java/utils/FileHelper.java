@@ -1,5 +1,6 @@
 package utils;
 
+import dto.User;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
@@ -16,5 +17,20 @@ public class FileHelper {
                 .statusCode(status)
                 .extract()
                 .response();
+    }
+    public static User parseUser(String content) {
+        String[] lines = content.split("\\R");
+        String username = null;
+        String password = null;
+        for (String line : lines) {
+            String[] parts = line.split("=", 2);
+            if ("username".equals(parts[0])) {
+                username = parts[1];
+            }
+            if ("password".equals(parts[0])) {
+                password = parts[1];
+            }
+        }
+        return new User(username, password);
     }
 }
