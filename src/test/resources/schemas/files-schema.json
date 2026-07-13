@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Файлы",
+  "description": "Список файлов на диске",
+  "type": "object",
+
+  "required": ["limit", "offset", "items"],
+
+  "properties": {
+    "limit": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "offset": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "items": {
+      "type": "array",
+      "minItems": 1,
+
+      "items": {
+        "type": "object",
+
+        "required": [
+          "path",
+          "type",
+          "created",
+          "modified",
+          "name",
+          "size",
+          "media_type",
+          "file"
+        ],
+
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^disk:/.*"
+          },
+
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+
+          "modified": {
+            "type": "string",
+            "format": "date-time"
+          },
+
+          "type": {
+            "type": "string",
+            "enum": ["file"]
+          },
+
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+
+          "size": {
+            "type": "integer",
+            "minimum": 0
+          },
+
+          "media_type": {
+            "type": "string"
+          },
+
+          "file": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    }
+  }
+}
