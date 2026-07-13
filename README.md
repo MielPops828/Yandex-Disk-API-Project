@@ -78,7 +78,7 @@ Yandex-Disk-API-Project/
 ### 1. Клонирование репозитория
 
 ```bash
-git clone https://github.com/your-username/Yandex-Disk-API-Project.git
+git clone https://github.com/MielPops828/Yandex-Disk-API-Project
 cd Yandex-Disk-API-Project
 ```
 
